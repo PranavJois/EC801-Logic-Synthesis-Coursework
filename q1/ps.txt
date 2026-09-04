@@ -1,0 +1,27 @@
+Given a  Boolean expression in Sum of Products (SoP) form, write a Python program to
+
+1. Find the cofactors of the function with respect to any given variable or a set of variables (a, ab, aB etc) and display the results.
+
+2. Find the Boolean Difference, Consensus  and Smoothing of the Boolean expression with respect to a given variable.
+
+ Note:
+
+ 1. You are free to assume the way you want to input the Boolean expression – from keyboard or from a file. Product terms can also be given as one per line or all in one line. It is left to you to decide how to feed the input Boolean expression.
+
+2. Whichever program takes bigger Boolean Expressions (with more variables) and gives the correct answer will be the benchmark for evaluation.
+
+3. You may use appropriate format to indicate the complement of a variable.  For example, small letters to indicate the variables and and capital letters to indicate its complement (like x and  X).
+
+4. Upload the Phython program in the Moodle.  
+
+5. Also, submit a two/three page report which should include the steps to execute the program and the screenshots of results of running the program for a given Boolean expression.
+
+Max. batch size: 3 students. Any one can upload the code and the Report.  
+
+Pl. follow the following naming convention.
+
+231EC001_231EC002_231EC003_Code1.py  and   231EC001_231EC002_231EC003_Report1.pdf 
+
+or  
+
+262VL001_262VL002_262VL003_Code1.py  and   262VL001_262VL002_262VL003_Report1.pdf 

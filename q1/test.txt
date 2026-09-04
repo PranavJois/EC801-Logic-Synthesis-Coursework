@@ -1,0 +1,2 @@
+aB + Ab
+ABC + Abc + AbC + aBc 
