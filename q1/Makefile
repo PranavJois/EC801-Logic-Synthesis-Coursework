@@ -1,8 +1,9 @@
 #makefile maybe used
 
-SRC = something.py
-TARGET = something.pyc
-BOOL_EXP = ques.txt
+SRC = main.py
+SUPPLEMENTARY = bool_func.py
+TARGET = out.pyc
+BOOL_EXP = test.txt
 
 CUR_DIR = $(shell pwd)
 BUILD_DIR = $(CUR_DIR)/build

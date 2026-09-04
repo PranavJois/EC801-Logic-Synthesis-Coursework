@@ -1,10 +1,15 @@
-import math as m
+#SOP form
+#eg: list = ['ab','aB','AB'] represents ab + aB + AB
+def list_to_exp(list_s):
+    for i in list_s[:-1]:
+        print(i,end='+')
+    print(list_s[-1],end='\n')
 
 def simplify_single(be_list,verbose=False):
     out=[]
     if "1" in be_list:
         out = ["1"]
-    #boolean exp simplification rules here. demorgan's laws etc
+    #boolean exp simplification rules here. demorgan's laws et
     if verbose:
         print ("check simplified exp = {}",out)
     return out
@@ -34,12 +39,10 @@ def cofactor_single(var,be_list,verbose=False):
 
     if verbose:
         print("f_var:")
-        for i in cof_var:
-            print(i,end='+')
+        list_to_exp(cof_var)
         print()
         print("f_var_bar:")
-        for i in cof_var_bar:
-            print(i,end='+')
+        list_to_exp(cof_var_bar)
         print()
 
 def boolean_diff_single(var,be_list,verbose=False):
