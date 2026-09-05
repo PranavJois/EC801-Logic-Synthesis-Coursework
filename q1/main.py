@@ -50,4 +50,9 @@ with open(file_name, 'r') as f:
         
 if len(be_split)!=0:
     #cofactor
-    bf.cofactor_single(var,be_split,verbose=True)
+    f_v, f_v_bar = bf.cofactor_single(var,be_split,verbose=True)
+
+
+f_diff = bf.boolean_diff_single(f_v,f_v_bar,True)
+f_consensus = bf.boolean_consensus_single(f_v,f_v_bar,True)
+f_smoothing = bf.boolean_smoothing_single(f_v,f_v_bar,True)

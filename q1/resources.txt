@@ -1,0 +1,4 @@
+https://www.flyriver.com/g/espresso-heuristic-logic-minimizer?auth=1788630669978
+https://www.flyriver.com/g/optimizing-boolean-expression?auth=1788630617343
+https://en.wikipedia.org/wiki/Quine–McCluskey_algorithm
+https://stackoverflow.com/questions/11324804/algorithm-minimizing-boolean-expressions
