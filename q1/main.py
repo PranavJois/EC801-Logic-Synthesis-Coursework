@@ -40,17 +40,17 @@ with open(file_name, 'r') as f:
                 be_split = bool_exp.split('+')
                 for i in range(len(be_split)):
                     be_split[i] = be_split[i].strip()
+            elif check ==2:
+                pass
 
-            # else:
-            #     if var.lower() not in bool_exp.lower():
-            #         print("")
-            #         be_split = bool_exp.split('+')
-            #         for i in range(len(be_split)):
-            #             be_split[i] = be_split[i].strip()
         
 if len(be_split)!=0:
     #cofactor
-    f_v, f_v_bar = bf.cofactor_single(var,be_split,verbose=True)
+    f_v, f_v_bar = bf.cofactor_single(var,be_split)
+    f_v = bf.bool_simplify_single(f_v)
+    f_v_bar = bf.bool_simplify_single(f_v_bar)
+    print("f_v = ",bf.list_to_exp(f_v))
+    print("f_v_bar = ",bf.list_to_exp(f_v_bar))
 
 
 f_diff = bf.boolean_diff_single(f_v,f_v_bar,True)

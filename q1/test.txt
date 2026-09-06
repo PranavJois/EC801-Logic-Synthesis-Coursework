@@ -1,3 +1,4 @@
 a + Ab
 aB + Ab
-ABC + Abc + AbC + aBc 
+ABC + Abc + bC + aBc 
+a+ bc + DE + FGH + Af + IjK + lMN + bn + dhk + eln
