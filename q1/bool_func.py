@@ -1,18 +1,44 @@
+def in_order(be_list):
+    # input: Bac + cAb-> output: aBc + Abc
+    out=[]
+    for i in be_list:
+        st = ""
+        x = list(i)
+        y = list(i.lower())
+        y.sort()
+        for j in y:
+            if (j in x):
+                st+=j
+            elif (j.upper() in x):
+                st+= j.upper()
+        out.append(st)
+    return out
+
+
 #SOP form
 #eg: list = ['ab','aB','AB'] represents ab + aB + AB
-def list_to_exp(list_s):
+def list_to_exp(list_s,verbose=False):
+    x=""
     if len(list_s)==0:
-        print("0",end='\n')
+        x="0"
     else:  
         for i in list_s[:-1]:
-            print(i,end='+')
-        print(list_s[-1],end='\n')
+            x+=i
+            x+=" + "
+        x+=list_s[-1]
+    if verbose:
+        print(x)
+    return x
 
 
 def cofactor_single(var,be_list,verbose=False):
-    var_b = var.upper()
+    if var ==var.lower():
+        var_b = var.upper()
+    else:
+        var_b = var.lower()
     cof_var = []
     cof_var_bar = []
+    be_list = in_order(be_list)
     for i in be_list:
         if (var not in i) and (var_b not in i):
             cof_var.append(i)
@@ -28,19 +54,20 @@ def cofactor_single(var,be_list,verbose=False):
             else:
                 cof_var_bar.append(i.replace(var_b,''))
 
+    #simplification without bool_simplify
+    if "1" in cof_var:
+        cof_var = ["1"]
+    if "1" in cof_var_bar:
+        cof_var_bar = ["1"]
+
     if verbose:
-        print("f_var:")
-        list_to_exp(cof_var)
-        print()
-        print("f_var_bar:")
-        list_to_exp(cof_var_bar)
-        print()
+            print(f"f_var:{list_to_exp(cof_var)}")
+            print()
+            print(f"f_var_bar:{list_to_exp(cof_var_bar)}")
+            print()
     return cof_var,cof_var_bar
 
 def find_order(be_list,verbose=False):
-    """Order to pick variables for the recursive cofactor expansion below.
-    Any permutation of the present variables is correctness-safe (it only
-    changes recursion shape), so this orders by descending appearance count."""
     counts = {}
     for term in be_list:
         for ch in term:
@@ -52,7 +79,7 @@ def find_order(be_list,verbose=False):
         print("variable order = ", order)
     return order
 
-def bool_simplify_single(be_list,order=None,verbose=False):
+def bool_simplify(be_list,order=None,verbose=False):
     out = list(set(be_list))  
     if len(out) == 0:
         return []
@@ -71,8 +98,8 @@ def bool_simplify_single(be_list,order=None,verbose=False):
 
     var = order[0]
     f_v, f_v_bar = cofactor_single(var,out,verbose=False)
-    f_v     = bool_simplify_single(f_v,verbose=False)
-    f_v_bar = bool_simplify_single(f_v_bar,verbose=False)
+    f_v     = bool_simplify(f_v,verbose=False)
+    f_v_bar = bool_simplify(f_v_bar,verbose=False)
 
     if f_v == f_v_bar: # var doesn't matter (covers 0/0, 1/1, and any other tie)
         out = f_v
@@ -90,8 +117,8 @@ def bool_simplify_single(be_list,order=None,verbose=False):
 
 
 def boolean_diff_single(f_v,f_v_bar,verbose=False):
-    f_v     = bool_simplify_single(f_v)
-    f_v_bar = bool_simplify_single(f_v_bar)
+    f_v     = bool_simplify(f_v)
+    f_v_bar = bool_simplify(f_v_bar)
     if f_v == f_v_bar:
         f = []  #xor of identical functions is 0
     else:
@@ -109,18 +136,16 @@ def boolean_diff_single(f_v,f_v_bar,verbose=False):
             else:
                 f  = [var.upper() if t == '1' else var.upper()+t for t in x0]
                 f += [var.lower() if t == '1' else var.lower()+t for t in x1]
-                f  = bool_simplify_single(f)
+                f  = bool_simplify(f)
     if verbose:
-            print("f_bool_diff:")
-            list_to_exp(f)
+            print(f"f_bool_diff:{list_to_exp(f)}")
             print()
     return f
 
 def and_sop(g,h):
-    """AND of two SOP-form functions, via the same recursive cofactor pattern
-    used by bool_simplify_single/boolean_diff_single."""
-    g = bool_simplify_single(g)
-    h = bool_simplify_single(h)
+    """AND of two SOP-form functions via recursive cofactor pattern"""
+    g = bool_simplify(g)
+    h = bool_simplify(h)
     if g == [] or h == []:
         return []
     if g == ["1"]:
@@ -139,72 +164,79 @@ def and_sop(g,h):
         return a1
     out  = [var.upper() if t == '1' else var.upper()+t for t in a0]
     out += [var.lower() if t == '1' else var.lower()+t for t in a1]
-    return bool_simplify_single(out)
+    return bool_simplify(out)
 
 def boolean_consensus_single(f_v,f_v_bar,verbose=False):
     f = and_sop(f_v,f_v_bar)
     if verbose:
-        print("f_consensus:")
-        list_to_exp(f)
+        print(f"f_consensus:{list_to_exp(f)}")
         print()
     return f
 
 def boolean_smoothing_single(f_v,f_v_bar,verbose=False):
     f = f_v + f_v_bar
     f = list(set(f))
-    f = bool_simplify_single(f,verbose=False)
+    f = bool_simplify(f,verbose=False)
 
     if verbose:
-        print("f_smoothing:")
-        list_to_exp(f)
+        print(f"f_smoothing:{list_to_exp(f)}")
         print()
     return f
 
-# ---------------------------------------------------------------------------
-# Multi-variable versions. var_str follows the same lowercase/uppercase
-# convention as SOP terms.
-#   - cofactor_multi: var_str is a *signed assignment* (e.g. 'ab' -> a=1,b=1;
-#     'aB' -> a=1,b=0), matching ps.txt's own notation.
-#   - consensus_multi / smoothing_multi: var_str just names the variables to
-#     eliminate -- case doesn't matter, order doesn't matter (universal /
-#     existential quantification over the set).
-#   - diff_multi: nth-order Boolean difference, f XOR (f with every variable
-#     in var_str complemented) -- the standard multi-variable generalization
-#     used for simultaneous-fault sensitivity in ATPG.
-# ---------------------------------------------------------------------------
+
+#multi case
+
+def cofactor_recursion(var_str,be_list):
+    working_list = be_list
+    for ch in var_str:
+        f_v,f_v_bar = cofactor_single(ch,working_list,False)
+        working_list = f_v
+    return working_list
 
 def cofactor_multi(var_str,be_list,verbose=False):
-    f = be_list
-    for ch in var_str:
-        var = ch.lower()
-        f_v, f_v_bar = cofactor_single(var,f,verbose=False)
-        f = f_v if ch.islower() else f_v_bar
-        f = bool_simplify_single(f)
+    """Cofactor be_list at every corner of the hypercube spanned by the
+    variables in var_str. Returns (f at var_str's own assignment, dict
+    mapping every OTHER corner's signed string -> its cofactor)."""
+    k = len(var_str)
+    corners = {}
+    for bits in range(2**k):
+        signed = ''.join(
+            var_str[i].lower() if (bits >> i) & 1 else var_str[i].upper()
+            for i in range(k)
+        )
+        corners[signed] = cofactor_recursion(signed,be_list)
+    f_v_final = corners.pop(var_str)
     if verbose:
-        print(f"f_{var_str}:")
-        list_to_exp(f)
+        print(f"f_{var_str}:{list_to_exp(f_v_final)}")
         print()
-    return f
+        print(f"f = f_{var_str}({list_to_exp(f_v_final)})",end="")
+        for s,f in corners.items():
+            print(f" + f_{s}({list_to_exp(f)})",end="")
+        print()
+    return f_v_final,corners
+
+
 
 def boolean_consensus_multi(var_str,be_list,verbose=False):
-    f = bool_simplify_single(be_list)
-    for ch in set(var_str.lower()):
-        f_v, f_v_bar = cofactor_single(ch,f,verbose=False)
-        f = boolean_consensus_single(f_v,f_v_bar)
+    """Universal quantification over var_str's variables = AND of all 2^k corners."""
+    f_v, corners = cofactor_multi(var_str,be_list)
+    f = f_v
+    for c in corners.values():
+        f = and_sop(f,c)
     if verbose:
-        print(f"f_consensus_{var_str}:")
-        list_to_exp(f)
+        print(f"f_consensus_{var_str}:{list_to_exp(f)}")
         print()
     return f
 
 def boolean_smoothing_multi(var_str,be_list,verbose=False):
-    f = bool_simplify_single(be_list)
-    for ch in set(var_str.lower()):
-        f_v, f_v_bar = cofactor_single(ch,f,verbose=False)
-        f = boolean_smoothing_single(f_v,f_v_bar)
+    """Existential quantification over var_str's variables = OR of all 2^k corners."""
+    f_v, corners = cofactor_multi(var_str,be_list)
+    f = list(f_v)
+    for c in corners.values():
+        f = f + c
+    f = bool_simplify(f)
     if verbose:
-        print(f"f_smoothing_{var_str}:")
-        list_to_exp(f)
+        print(f"f_smoothing_{var_str}:{list_to_exp(f)}")
         print()
     return f
 
@@ -223,11 +255,10 @@ def flip_vars(be_list,var_str):
     return out
 
 def boolean_diff_multi(var_str,be_list,verbose=False):
-    f         = bool_simplify_single(be_list)
-    f_flipped = bool_simplify_single(flip_vars(f,var_str))
+    f         = bool_simplify(be_list)
+    f_flipped = bool_simplify(flip_vars(f,var_str))
     diff = boolean_diff_single(f,f_flipped)
     if verbose:
-        print(f"f_bool_diff_{var_str}:")
-        list_to_exp(diff)
+        print(f"f_bool_diff_{var_str}:{list_to_exp(diff)}")
         print()
     return diff

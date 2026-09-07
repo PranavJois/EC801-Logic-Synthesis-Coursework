@@ -41,15 +41,15 @@ if len(be_split)!=0:
         if var not in bool_exp.lower():
             print("Control variable not in expression. Cofactors are equal to each other and equal to the original expression.")
         f_v, f_v_bar = bf.cofactor_single(var,be_split,verbose=True)
-        f_v = bf.bool_simplify_single(f_v)
-        f_v_bar = bf.bool_simplify_single(f_v_bar)
+        f_v = bf.bool_simplify(f_v)
+        f_v_bar = bf.bool_simplify(f_v_bar)
         f_diff = bf.boolean_diff_single(f_v,f_v_bar,True)
         f_consensus = bf.boolean_consensus_single(f_v,f_v_bar,True)
         f_smoothing = bf.boolean_smoothing_single(f_v,f_v_bar,True)
     elif check == 2:
         if not all(v.lower() in bool_exp.lower() for v in vars):
-            print("Not all control variables are in the expression.")
-        f_cof = bf.cofactor_multi(vars,be_split,verbose=True)
+            print("WARNING: Not all control variables are in the expression.")
+        f_v_multi, other_corners = bf.cofactor_multi(vars,be_split,verbose=True)
         f_diff = bf.boolean_diff_multi(vars,be_split,True)
         f_consensus = bf.boolean_consensus_multi(vars,be_split,True)
         f_smoothing = bf.boolean_smoothing_multi(vars,be_split,True)
