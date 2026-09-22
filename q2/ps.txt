@@ -1,0 +1,11 @@
+Given a SoP form of Boolean expression (with minimum of 6 variables), write a program (in python/C/TclTk etc.) to find and display the ROBDD of the function, for a given variable ordering.
+
+Please note:
+
+1. You are free to assume the way you want to input the Boolean expression – from keyboard, file etc.  Product terms (cubes) can also be given as one per line. 
+
+2. Build and display the ROBDD.  This  can be either in a graph format or in any other way which you specify (E.g., display the nodes in Depth First Search (DFS) or Breadth First Search (BFS) etc format). 
+
+3. Upload the code (.py or .c etc) file.
+
+4. Also upload a brief report giving details about how to run the program and how to enter the Boolean expression.  Also include the screenshots of the results you obtained.
